@@ -29,9 +29,9 @@ function App() {
         setUsers(
           v.map((user) => ({
             id: user[0],
-            surname: user[1],
-            name: user[2],
-            email: user[3],
+            surname: user[1].trim(),
+            name: user[2].trim(),
+            email: user[3].trim(),
             login: generateLogin(user),
             password: generatePassword(user),
           }))
@@ -56,7 +56,10 @@ function App() {
     const data = {
       username: user.login,
       name: user.surname + " " + user.name,
+      first_name: user.name,
+      last_name: user.surname,
       email: user.email,
+      nickname: user.login,
       password: user.password,
     };
 
