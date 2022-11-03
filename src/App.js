@@ -2,6 +2,7 @@ import { Button, FormControl, MenuItem, Select } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useCallback, useEffect, useState } from "react";
 import { transliterate } from "transliteration";
+import { API } from "./api";
 import { FormDialog } from "./FormDialog";
 
 const ID = "1WUdFK28ijRp-R66PwPcNEekAB01OuxvEPcYfPt01TPE";
@@ -11,11 +12,18 @@ const RANGES_MAP = {
   Культура: 918094572,
   "Консультування плюс сім'я": 862170911,
 };
+const COURSE_IDS = {
+  Громада: 10128,
+  Культура: 10131,
+  "Консультування плюс сім'я": 10126,
+};
 
 function App() {
   const [creds, setCreds] = useState(null);
   const [range, setRange] = useState(RANGES[0]);
   const [users, setUsers] = useState([]);
+
+  const api = new API({ user: creds?.login, password: creds?.password });
 
   const loadUsers = useCallback(() => {
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${ID}/values/${range}?key=${creds.apiKey}`;
@@ -50,37 +58,6 @@ function App() {
     }
   }, [creds, loadUsers]);
 
-  function createUser(user) {
-    const authorization = `Basic ${btoa(creds.login + ":" + creds.password)}`;
-    const url = "https://hva.org.ua/wp-json/wp/v2/users";
-    const data = {
-      username: user.login,
-      name: user.surname + " " + user.name,
-      first_name: user.name,
-      last_name: user.surname,
-      email: user.email,
-      nickname: user.login,
-      password: user.password,
-    };
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        Authorization: authorization,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((r) => {
-        if (r.ok) {
-          alert("Створено особистий кабінет");
-        } else {
-          alert("Помилка при створені особистого кабінету");
-        }
-      })
-      .catch(() => alert("Помилка при створені особистого кабінету"));
-  }
-
   function getLink(id, range) {
     return `https://docs.google.com/spreadsheets/d/1WUdFK28ijRp-R66PwPcNEekAB01OuxvEPcYfPt01TPE/edit#gid=${
       RANGES_MAP[range]
@@ -94,14 +71,25 @@ function App() {
     { field: "login", headerName: "Логін", flex: 2 },
     { field: "password", headerName: "Пароль", flex: 3 },
     {
-      field: "-",
+      field: "1",
       headerName: "Створити кабінет",
       renderCell: (params) => (
         <Button
           variant="contained"
           size="small"
           tabIndex={params.hasFocus ? 0 : -1}
-          onClick={() => createUser(params.row)}
+          onClick={() => {
+            api
+              .createUser(params.row)
+              .then((r) => {
+                if (r.ok) {
+                  alert("Створено особистий кабінет");
+                } else {
+                  alert("Помилка при створені особистого кабінету");
+                }
+              })
+              .catch(() => alert("Помилка при створені особистого кабінету"));
+          }}
         >
           Створити
         </Button>
@@ -109,7 +97,7 @@ function App() {
       flex: 1,
     },
     {
-      field: "--",
+      field: "2",
       headerName: "Копіювати повідомлення",
       renderCell: (params) => (
         <Button
@@ -127,7 +115,25 @@ function App() {
       flex: 1,
     },
     {
-      field: "---",
+      field: "3",
+      headerName: "Додати до курсу",
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          size="small"
+          tabIndex={params.hasFocus ? 0 : -1}
+          onClick={() => {
+            const id = "";
+            api.addToCourse(COURSE_IDS[range], id);
+          }}
+        >
+          Додати
+        </Button>
+      ),
+      flex: 1,
+    },
+    {
+      field: "4",
       headerName: "Поставити галочку",
       renderCell: (params) => (
         <Button
@@ -164,7 +170,7 @@ function App() {
 }
 
 function generateLogin(user) {
-  return user[3].substring(0, user[3].indexOf("@"));
+  return user[3].substring(0, user[3].indexOf("@")).toLowerCase();
 }
 
 function generatePassword(user) {
