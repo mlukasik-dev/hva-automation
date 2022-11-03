@@ -3,6 +3,17 @@ export class API {
     this.wpAuthorization = `Basic ${btoa(user + ":" + password)}`;
   }
 
+  async getUserId(login) {
+    const url = `https://hva.org.ua/wp-json/wp/v2/users?search=${login}`;
+    const resp = await fetch(url, {
+      headers: {
+        Authorization: this.wpAuthorization,
+      },
+    });
+    const users = await resp.json();
+    return users[0].id;
+  }
+
   async addToCourse(courseId, userId) {
     const url = `https://hva.org.ua/wp-json/ldlms/v2/sfwd-courses/${courseId}/users`;
     const data = { user_ids: [+userId] };

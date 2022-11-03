@@ -33,7 +33,9 @@ function App() {
       .then((body) => {
         let v = body.values;
         v.shift();
-        v = v.filter((user) => user[3] !== "" && user[6] === "");
+        v = v.filter(
+          (user) => user[3] !== "" && (user[6] === "" || user[7] === "")
+        );
         setUsers(
           v.map((user) => ({
             id: user[0],
@@ -42,6 +44,8 @@ function App() {
             email: user[3].trim(),
             login: generateLogin(user),
             password: generatePassword(user),
+            hasProfile: user[6] !== "",
+            addedToCourse: user[7] !== "",
           }))
         );
       })
@@ -78,6 +82,7 @@ function App() {
           variant="contained"
           size="small"
           tabIndex={params.hasFocus ? 0 : -1}
+          disabled={params.row.hasProfile}
           onClick={() => {
             api
               .createUser(params.row)
@@ -122,8 +127,9 @@ function App() {
           variant="contained"
           size="small"
           tabIndex={params.hasFocus ? 0 : -1}
-          onClick={() => {
-            const id = "";
+          disabled={params.row.addedToCourse || !params.row.hasProfile}
+          onClick={async () => {
+            const id = await api.getUserId(params.row.login);
             api.addToCourse(COURSE_IDS[range], id);
           }}
         >
