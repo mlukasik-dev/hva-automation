@@ -1,3 +1,9 @@
+const RANGES_MAP = {
+  Громада: 563749336,
+  Культура: 918094572,
+  "Консультування плюс сім'я": 862170911,
+};
+
 export class API {
   constructor({ user, password }) {
     this.wpAuthorization = `Basic ${btoa(user + ":" + password)}`;
@@ -48,5 +54,11 @@ export class API {
       },
       body: JSON.stringify(data),
     });
+  }
+
+  getLink(id, range) {
+    return `https://docs.google.com/spreadsheets/d/1WUdFK28ijRp-R66PwPcNEekAB01OuxvEPcYfPt01TPE/edit#gid=${
+      RANGES_MAP[range]
+    }&range=G${+id + 1}`;
   }
 }
