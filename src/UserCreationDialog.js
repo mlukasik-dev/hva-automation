@@ -5,7 +5,9 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  TextField,
 } from "@mui/material";
+import { useEffect, useState } from "react";
 
 const COURSE_IDS = {
   Громада: 10128,
@@ -13,17 +15,34 @@ const COURSE_IDS = {
   "Консультування плюс сім'я": 10126,
 };
 
-export function UserCreationDialog({ open, user, api, handleClose }) {
+export function UserCreationDialog({ open, user: propUser, api, handleClose }) {
+  const [user, setUser] = useState(propUser);
+  useEffect(() => {
+    setUser(propUser);
+  }, [propUser]);
   if (!user) {
     return;
   }
-
   const txt = getMessage(user);
 
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Дії</DialogTitle>
       <DialogContent>
+        <TextField
+          style={{ marginTop: 5, marginBottom: 10 }}
+          label="Логін"
+          size="small"
+          value={user.login}
+          onChange={(e) => setUser({ ...user, login: e.target.value })}
+        />
+        <TextField
+          style={{ marginTop: 5, marginBottom: 10 }}
+          label="Email"
+          size="small"
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+        />
         <DialogContentText component="pre">{txt}</DialogContentText>
       </DialogContent>
       <DialogActions>
