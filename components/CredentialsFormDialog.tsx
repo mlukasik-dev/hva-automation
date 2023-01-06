@@ -1,27 +1,36 @@
+import { useState } from 'react'
 import {
   Button,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
   TextField,
-} from "@mui/material";
-import { useState } from "react";
+} from '@mui/material'
+import { InCaseOfProblems } from './InCaseOfProblems'
 
-export function FormDialog({ open, handleSubmit }) {
-  const [creds, setCreds] = useState({ login: "", password: "", apiKey: "" });
+export type Credentials = {
+  login: string
+  password: string
+}
+
+type Props = {
+  handleSubmit: (creds: Credentials) => void
+}
+
+export function CredentialsFormDialog({ handleSubmit }: Props) {
+  const [creds, setCreds] = useState({ login: '', password: '' })
 
   return (
-    <Dialog open={open}>
+    <>
       <DialogTitle>Введіть необхідні дані</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          В разі проблем пишіть <a href="https://t.me/mlukasik">@mlukasik.</a>
+          <InCaseOfProblems />
         </DialogContentText>
         <TextField
           value={creds.login}
-          onChange={(e) =>
+          onChange={e =>
             setCreds({
               ...creds,
               login: e.target.value.trim(),
@@ -34,7 +43,7 @@ export function FormDialog({ open, handleSubmit }) {
         />
         <TextField
           value={creds.password}
-          onChange={(e) =>
+          onChange={e =>
             setCreds({
               ...creds,
               password: e.target.value.trim(),
@@ -45,23 +54,10 @@ export function FormDialog({ open, handleSubmit }) {
           label="Пароль"
           fullWidth
         />
-        <TextField
-          value={creds.apiKey}
-          onChange={(e) =>
-            setCreds({
-              ...creds,
-              apiKey: e.target.value.trim(),
-            })
-          }
-          margin="dense"
-          id="api-key"
-          label="API ключ"
-          fullWidth
-        />
       </DialogContent>
       <DialogActions>
         <Button onClick={() => handleSubmit(creds)}>Зберегти</Button>
       </DialogActions>
-    </Dialog>
-  );
+    </>
+  )
 }

@@ -1,43 +1,44 @@
 {
-  "name": "wp-automation-script",
+  "name": "hva-automation",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "next start -p 8080",
+    "dev": "next dev",
+    "build": "next build",
+    "gcp-build": "next build",
+    "export": "next export",
+    "format": "prettier --write .",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@mui/material": "^5.10.12",
-    "@mui/x-data-grid": "^5.17.9",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "transliteration": "^2.3.5",
-    "web-vitals": "^2.1.4"
+    "@googleapis/sheets": "^4.0.1",
+    "@googleapis/youtube": "^8.0.1",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.114",
+    "@mui/material": "^5.10.13",
+    "@types/node": "18.11.9",
+    "@types/react": "18.0.25",
+    "@types/react-dom": "18.0.8",
+    "eslint": "8.27.0",
+    "eslint-config-next": "13.0.2",
+    "google-auth-library": "^8.7.0",
+    "linkify-html": "^4.0.2",
+    "linkifyjs": "^4.0.2",
+    "next": "13.0.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.41.5",
+    "react-query": "^3.39.2",
+    "typescript": "4.8.4",
+    "universal-cookie": "^4.0.4"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.8.1"
   }
 }

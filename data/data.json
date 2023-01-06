@@ -1,0 +1,20 @@
+{
+  "youtube": {
+    "channelId": "UCvxM1isdFQ9bYCoCFXtBWbw",
+    "uploadPlaylistId": "UULFvxM1isdFQ9bYCoCFXtBWbw"
+  },
+  "ldCourses": [
+    {
+      "id": 10126,
+      "title": "Основи консультування і сімейне служіння"
+    },
+    {
+      "id": 10128,
+      "title": "Розвиток громад і соціальні проекти"
+    },
+    {
+      "id": 10131,
+      "title": "Суспільство і культура"
+    }
+  ]
+}
