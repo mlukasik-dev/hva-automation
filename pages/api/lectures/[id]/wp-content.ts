@@ -1,21 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { youtube } from '@googleapis/youtube'
-import { GoogleAuth } from 'google-auth-library'
 import linkifyHtml from 'linkify-html'
-
-const service = youtube({
-  version: 'v3',
-  auth: new GoogleAuth({
-    scopes: 'https://www.googleapis.com/auth/youtube.readonly',
-  }),
-})
+import youtubeService from '@/lib/youtube'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const videoId = req.query.id as string
-  const resp = await service.videos.list({
+  const resp = await youtubeService.videos.list({
     part: ['snippet'],
     id: [videoId],
   })

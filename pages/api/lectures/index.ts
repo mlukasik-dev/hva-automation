@@ -1,17 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { youtube } from '@googleapis/youtube'
-import { GoogleAuth } from 'google-auth-library'
 import data from '@/data/data.json'
-
-const service = youtube({
-  version: 'v3',
-  auth: new GoogleAuth({
-    scopes: 'https://www.googleapis.com/auth/youtube.readonly',
-  }),
-})
+import youtubeService from '@/lib/youtube'
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse) {
-  const resp = await service.playlistItems.list({
+  const resp = await youtubeService.playlistItems.list({
     part: ['snippet'],
     maxResults: 10,
     playlistId: data.youtube.uploadPlaylistId,
