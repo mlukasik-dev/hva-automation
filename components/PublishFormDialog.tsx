@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
-  Button,
   CircularProgress,
   DialogActions,
   DialogContent,
@@ -32,7 +31,8 @@ import { Controller, useForm } from 'react-hook-form'
 import { useQuery } from 'react-query'
 import { useUI } from './UIProvider/useUI'
 import { PublishLocationResponse } from '@/pages/api/lectures/publish-location'
-import { DoneOutline } from '@mui/icons-material'
+import { DoneOutline, Publish } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 
 type Props = {
   id: string
@@ -46,6 +46,7 @@ type Inputs = {
 }
 
 export default function PublishFormDialog({ id }: Props) {
+  const [isPublishing, setIsPublishing] = useState(false)
   const { register, control, handleSubmit, setValue, watch } = useForm<Inputs>({
     defaultValues: {
       editWpContent: false,
@@ -117,6 +118,7 @@ export default function PublishFormDialog({ id }: Props) {
       ui.showError({ message: 'Error happened' })
       return
     }
+    setIsPublishing(true)
     for (const location of publishLocationsData.locations) {
       const data = {
         wpContent,
@@ -124,12 +126,20 @@ export default function PublishFormDialog({ id }: Props) {
       }
       api
         .post(`/api/lectures/publish`, data)
-        .then(() =>
+        .then(() => {
           setPublishLocations(
             publishLocations.map(item => ({ ...item, published: true }))
           )
-        )
-        .catch(() => ui.showError({ message: 'Error happened' }))
+          setIsPublishing(false)
+          ui.showSnackbar({
+            message: 'Лекція успішно опублікована',
+            autoHideDuration: 3000,
+          })
+        })
+        .catch(() => {
+          setIsPublishing(false)
+          ui.showError({ message: 'Error happened' })
+        })
     }
   }
 
@@ -284,9 +294,15 @@ export default function PublishFormDialog({ id }: Props) {
       </DialogContent>
 
       <DialogActions>
-        <Button type="submit" variant="contained">
+        <LoadingButton
+          type="submit"
+          variant="contained"
+          startIcon={<Publish />}
+          loadingPosition="start"
+          loading={isPublishing}
+        >
           Опублікувати
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </form>
   )
